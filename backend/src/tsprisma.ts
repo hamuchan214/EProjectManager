@@ -1,32 +1,16 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { PrismaClient } from '@prisma/client'
 
-async function main() 
-{
-    const taro = await prisma.user.upsert({
-      where: { email: "taro@example.com" },
-      update: {},
-      create: {
-        email: "taro@example.com",
-        name: "taro",
-      },
-    });
+const prisma = new PrismaClient()
 
-    const jiro = await prisma.user.upsert({
-      where: { email: "jiro@example.com" },
-      update: {},
-      create: {
-        email: "jiro@example.com",
-        name: "jiro",
-      },
-    });
+async function main() {
+  const allUsers = await prisma.user.findMany()
+  console.log(allUsers)
 }
 
 main()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+  .catch((e) => {
+    throw e
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })
