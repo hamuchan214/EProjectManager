@@ -18,9 +18,9 @@ router.get("/:id", async(req: Request, res: Response) => {
 });
 
 router.post("/", async(req: Request, res: Response) => {
-    const { name, email} = req.body;
+    const { name, email, password} = req.body;
     const user = await prisma.user.create({
-        data: { name, email},
+        data: { name, email, password},
     });
     res.json({ user });
 });
