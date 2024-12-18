@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, TextField, Typography, Card, CssBaseline, FormControl, FormLabel, Link, CircularProgress } from '@mui/material';
+import { Box, Button, TextField, Typography, Card, CssBaseline, FormControl, FormLabel, Link, CircularProgress, Divider } from '@mui/material';
 import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
 import { Container } from '@mui/material';
 import ForgotPassword from "./ForgotPassword";
@@ -34,6 +34,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [newuser, setNewuser] = useState(false);
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
   
@@ -61,6 +62,10 @@ const LoginForm = () => {
 
   const handleForgotPasswordClose = () => {
     setForgotPasswordOpen(false);
+  }
+
+  const handleNewUser = () => {
+    setNewuser(!newuser);
   }
 
   return (
@@ -122,6 +127,13 @@ const LoginForm = () => {
           <Link component={Button} variant="body2" sx={{alignSelf: 'center', marginTop: 1}} onClick={handleForgotPasswordOpen}>
             パスワードをお忘れですか?
           </Link>
+          <Divider>or</Divider>
+          <Typography sx={{ textAlign: 'center' }}>
+            アカウントが未登録ですか？
+            <Link href="/signup" variant="body2" sx={{alignSelf: 'center', marginTop: 1}}>
+              新規登録
+            </Link>
+          </Typography>
         </StyledCard>
       </Container>
       <ForgotPassword open={forgotPasswordOpen} handleClose={handleForgotPasswordClose} />
