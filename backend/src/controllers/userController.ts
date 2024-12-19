@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Router, Request, Response } from "express";
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 const router = Router();
@@ -11,18 +12,43 @@ router.get("/", async(req: Request, res: Response) =>{
 });
 
 router.get("/:id", async(req: Request, res: Response) => {
-    const user_id = await prisma.user.findUnique({
-        where: {id: parseInt(req.params?.id)},
+    const user = await prisma.user.findUnique({
+        where: {id:parseInt(req.params?.id)}
     });
-    res.json({ user_id });
+    if (!user) {
+        res.status(404).json({error: "User not found"});
+        return;
+    }
+    res.json({user});
 });
 
 router.post("/", async(req: Request, res: Response) => {
-    const { name, email, password} = req.body;
-    const user = await prisma.user.create({
-        data: { name, email, password},
-    });
-    res.json({ user });
+    try {
+        const { name, email, password } = req.body;
+        
+        // 基本的なバリデーション
+        if (!name || !email || !password) {
+            res.status(400).json({ error: '必須項目が不足しています' });
+            return;
+        }
+        
+        // パスワードのハッシュ化
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        const user = await prisma.user.create({
+            data: { 
+                name, 
+                email, 
+                password: hashedPassword
+            },
+        });
+        
+        // パスワードを除外してレスポンスを返す
+        const { password: _, ...userWithoutPassword } = user;
+        res.status(201).json({ user: userWithoutPassword });
+    } catch (error) {
+        res.status(500).json({ error: 'サーバーエラーが発生しました' });
+    }
 });
 
 router.put("/:id", async(req: Request, res: Response) => {
