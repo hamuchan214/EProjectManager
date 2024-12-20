@@ -20,6 +20,8 @@ model User{
   email String @unique
   password String?
   id_discord_linked Boolean @default(false)
+  emailVerified DateTime?
+  image String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

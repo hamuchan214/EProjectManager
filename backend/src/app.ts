@@ -1,5 +1,6 @@
 import express from "express";
 import userContoroller from "./controllers/userController";
+import authController from './controllers/authController';
 
 const app = express();
 app.use(express.json());
@@ -11,5 +12,6 @@ app.get("/", (req, res) => {
 })
 
 app.use("/users", userContoroller);
+app.use('/auth', authController);
 
 export default app;
